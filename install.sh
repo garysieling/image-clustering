@@ -14,3 +14,6 @@ python3 setup.py install
 cd ..
 cd ..
 
+git clone https://github.com/davidsandberg/facenet.git
+cd facenet
+pip3 install -r requirements.txt
