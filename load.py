@@ -4,6 +4,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import facenet.src.align.detect_face as align
 import tensorflow as tf
 import numpy as np
 import argparse
@@ -18,8 +19,8 @@ from scipy import misc
 from six.moves import xrange
 
 def main(args):
-  
-    #images, cout_per_image, nrof_samples = load_and_align_data(args.image_files,args.image_size, args.margin, args.gpu_memory_fraction)
+    image_files = "/images/"; 
+    images, cout_per_image, nrof_samples = load_and_align_data(image_files,args.image_size, args.margin, args.gpu_memory_fraction)
     with tf.Graph().as_default():
 
        with tf.Session() as sess:
@@ -44,7 +45,7 @@ def main(args):
                 k=0     
 	    #print predictions       
                 for i in range(nrof_samples):
-                    print("\npeople in image %s :" %(args.image_files[i]))
+                    print("\npeople in image %s :" %("/images/"))
                     for j in range(cout_per_image[i]):
                         print('%s: %.3f' % (class_names[best_class_indices[k]], best_class_probabilities[k]))
                         k+=1
@@ -82,13 +83,12 @@ def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
                 prewhitened = facenet.prewhiten(aligned)
                 img_list.append(prewhitened)		
     images = np.stack(img_list)
-    #return images, count_per_image, nrof_samples
-
+    return images, count_per_image, nrof_samples 
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
-    parser.add_argument('image_files', type=str, nargs='+', help='Path(s) of the image(s)')
-    #parser.add_argument('model', type=str, 
-    #    help='Could be either a directory containing the meta_file and ckpt_file or a model protobuf (.pb) file')
+    #parser.add_argument('image_files', type=str, nargs='+', help='Path(s) of the image(s)')
+    parser.add_argument('model', type=str, 
+        help='Could be either a directory containing the meta_file and ckpt_file or a model protobuf (.pb) file')
     #parser.add_argument('classifier_filename', 
     #    help='Classifier model file name as a pickle (.pkl) file. ' + 
     #    'For training this is the output and for classification this is an input.', default = "")
