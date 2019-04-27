@@ -12,6 +12,7 @@ run git clone https://github.com/opencv/opencv.git && \
   cmake ../ && \
   make && \
   make install
+run pip3 install pillow
 copy facenet /root/facenet
 copy run.sh /root/run.sh
 copy load.py /root/load.py

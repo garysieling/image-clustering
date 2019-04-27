@@ -17,9 +17,17 @@ from sklearn.svm import SVC
 from scipy import misc
 #import align.detect_face
 from six.moves import xrange
-
+import random
+ 
 def main(args):
-    image_files = "/images/"; 
+    mypath = "/images/**" 
+    from os import listdir
+    from os.path import isfile, join
+    import glob
+    print([f for f in glob.glob(mypath, recursive=True)])
+    all_images = [f for f in glob.glob(mypath, recursive=True) if isfile(f)]
+    image_files = random.sample(all_images, 10)
+
     images, cout_per_image, nrof_samples = load_and_align_data(image_files,args.image_size, args.margin, args.gpu_memory_fraction)
     with tf.Graph().as_default():
 
@@ -51,7 +59,7 @@ def main(args):
                         k+=1
                     
 def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
-
+    print(image_paths)
     minsize = 20 # minimum size of face
     threshold = [ 0.6, 0.7, 0.7 ]  # three steps's threshold
     factor = 0.709 # scale factor
@@ -61,7 +69,7 @@ def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
         gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=gpu_memory_fraction)
         sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
         with sess.as_default():
-            pnet, rnet, onet = align.detect_face.create_mtcnn(sess, None)
+            pnet, rnet, onet = align.create_mtcnn(sess, None)
   
     nrof_samples = len(image_paths)
     img_list = [] 
@@ -69,7 +77,7 @@ def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
     for i in xrange(nrof_samples):
         img = misc.imread(os.path.expanduser(image_paths[i]))
         img_size = np.asarray(img.shape)[0:2]
-        bounding_boxes, _ = align.detect_face.detect_face(img, minsize, pnet, rnet, onet, threshold, factor)
+        bounding_boxes, _ = align.detect_face(img, minsize, pnet, rnet, onet, threshold, factor)
         count_per_image.append(len(bounding_boxes))
         for j in range(len(bounding_boxes)):	
                 det = np.squeeze(bounding_boxes[j,0:4])
