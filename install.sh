@@ -1,3 +1,5 @@
+set -e
+
 pip3 install tensorflow
 pip3 install facenet
 pip3 install pandas

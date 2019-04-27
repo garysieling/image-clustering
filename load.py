@@ -19,13 +19,13 @@ from six.moves import xrange
 
 def main(args):
   
-    images, cout_per_image, nrof_samples = load_and_align_data(args.image_files,args.image_size, args.margin, args.gpu_memory_fraction)
+    #images, cout_per_image, nrof_samples = load_and_align_data(args.image_files,args.image_size, args.margin, args.gpu_memory_fraction)
     with tf.Graph().as_default():
 
        with tf.Session() as sess:
       
             # Load the model
-                facenet.load_model(args.model)
+                facenet.load_model("/root/model/20180408-102900.pb")
             # Get input and output tensors
                 images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
                 embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
@@ -82,16 +82,16 @@ def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
                 prewhitened = facenet.prewhiten(aligned)
                 img_list.append(prewhitened)		
     images = np.stack(img_list)
-    return images, count_per_image, nrof_samples
+    #return images, count_per_image, nrof_samples
 
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument('image_files', type=str, nargs='+', help='Path(s) of the image(s)')
-    parser.add_argument('model', type=str, 
-        help='Could be either a directory containing the meta_file and ckpt_file or a model protobuf (.pb) file')
-    parser.add_argument('classifier_filename', 
-        help='Classifier model file name as a pickle (.pkl) file. ' + 
-        'For training this is the output and for classification this is an input.')
+    #parser.add_argument('model', type=str, 
+    #    help='Could be either a directory containing the meta_file and ckpt_file or a model protobuf (.pb) file')
+    #parser.add_argument('classifier_filename', 
+    #    help='Classifier model file name as a pickle (.pkl) file. ' + 
+    #    'For training this is the output and for classification this is an input.', default = "")
     parser.add_argument('--image_size', type=int,
         help='Image size (height, width) in pixels.', default=160)
     parser.add_argument('--seed', type=int,

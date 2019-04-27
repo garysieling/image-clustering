@@ -1,2 +1,4 @@
 hnswlib/*
 facenet/*
+model/*
+*.swp
